@@ -19,20 +19,27 @@ Plugin 'jiangmiao/auto-pairs'
 Plugin 'scrooloose/nerdtree'
 Plugin 'rking/ag.vim'
 Plugin 'bling/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 Plugin 'alvan/vim-closetag'
 Plugin 'vim-scripts/Colour-Sampler-Pack'
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'joshdick/onedark.vim'
 Plugin 'tpope/vim-surround'
 Plugin 'scrooloose/syntastic'
 Plugin 'Shutnik/jshint2.vim'
+Plugin 'nrocco/vim-phplint'
 Plugin 'majutsushi/tagbar'
 Plugin 'tomtom/tcomment_vim'
 Plugin 'jelera/vim-javascript-syntax'
 Plugin 'pangloss/vim-javascript'
-Plugin 'nathanaelkane/vim-indent-guides'
-Plugin 'Valloric/YouCompleteMe'
 Plugin 'marijnh/tern_for_vim'
-Plugin 'einars/js-beautify'
 Plugin 'maksimr/vim-jsbeautify'
+Plugin 'editorconfig/editorconfig-vim'
+Plugin 'sheerun/vim-polyglot'
+Plugin 'mustache/vim-mustache-handlebars'
+Plugin 'tpope/vim-fugitive'
+Plugin 'Shougo/vimproc'
+Plugin 'Shougo/unite.vim'
 
 " All of your Plugins must be added before the following line
 call vundle#end()
@@ -62,36 +69,32 @@ set nostartofline   " don't jump to first character when paging
 set whichwrap=b,s,h,l,<,>,[,]   " move freely between files
 set backspace=indent,eol,start " backspace past cindented spaces
 set autoindent      " always set autoindenting on
-set expandtab       " tabs are not converted to spaces
+set noexpandtab       " tabs are not converted to spaces
+set fileformat=unix " allows for single line feeds at end of line
+
+" Set ctags folder
+set tags=tags;/
 
 " Allow vim to copy to tmux
 set clipboard=unnamed
 
+" Turn off auto preview of GetDoc for YCM
+set completeopt-=preview
+
 " Speed up vim
-set ttyfast         " faster redraw 
+set ttyfast         " faster redraw
 set ttyscroll=3
 set lazyredraw      " to avoid scrolling problems
 
-" Omni complete settings
-set omnifunc=phpcomplete#CompletePHP
-
 " Set amount of lines to scroll by
-noremap <C-u> 10<C-u>
-noremap <C-d> 10<C-d>
+noremap <C-u> 20<C-u>
+noremap <C-d> 20<C-d>
 
 " Syntax highlighing
 syntax on
-set background=dark
-let g:solarized_termcolors=16
-let g:solarized_visibility = "high"
-let g:solarized_contrast = "high"
-colorscheme solarized
-hi Search ctermfg=White
-
-" YCM settings
-let g:ycm_add_preview_to_completeopt=0
-let g:ycm_confirm_extra_conf=0
-set completeopt-=preview
+colorscheme onedark 
+let g:onedark_termcolors=256
+let g:airline_theme='onedark'
 
 " Autocommand settings
 if has("autocmd")
@@ -103,32 +106,18 @@ if has("autocmd")
 	au FileType helpfile nnoremap <buffer><cr> <c-]>   " Enter selects subject
 	au FileType helpfile nnoremap <buffer><bs> <c-T>   " Backspace to go back
 
-	" When using mutt, text width=72
+" When using mutt, text width=72
 	au FileType mail,tex set textwidth=72
 	nnoremap ,p :set invpaste paste?<CR>
 	set pastetoggle=,p
 	set showmode
 	au BufRead mutt*[0-9] set tw=72
 
-	" Automatically chmod +x Shell and Perl scripts
-	au BufWritePost   *.sh             !chmod +x %
-	au BufWritePost   *.pl             !chmod +x %
-
-	" Set syntax for specific file formats
-	au BufNewFile,BufRead  *.html set syntax=html
-	au BufNewFile,BufRead  *.html set syntax=php
-	au BufNewFile,BufRead  *.tpl  set syntax=html
-	au BufNewFile,BufRead  *.ctp  set syntax=html
-	au BufNewFile,BufRead  *.ctp  set syntax=php
-	au BufNewFile,BufRead  *.gsp  set syntax=html
-	au BufNewFile,BufRead  *.pls  set syntax=dosini
-	au BufNewFile,BufRead  modprobe.conf    set syntax=modconf
-	au BufNewFile,BufRead  *.json set ft=javascript
-
-	" Set filetype for specific file formats
-	au BufRead,BufNewFile *.ctp setlocal filetype=html
-	au BufRead,BufNewFile *.gsp setlocal filetype=html
-	au BufRead,BufNewFile *.tpl setlocal filetype=html
+" Set syntax for specific file formats
+	au BufNewFile,BufRead  *.blade.* set ft=php.html
+	au BufNewFile,BufRead  *.blade.* set syntax=blade.php
+	au BufNewFile,BufRead  *.json.* set syntax=json
+	au BufNewFile,BufRead  *jshintrc set syntax=json
 endif
 
 " Syntastic settings
@@ -151,7 +140,8 @@ map ,u :source ~/.vimrc<cr> " update the system settings from my vimrc file
 map ,tw :%s/\s\+$//<cr> " Remove trailing whitespace on all lines
 
 " Control+P settings
-set wildignore+=*/platform/*,*/www/*
+set wildignore+=*/platform/*,*/superbalist-frontend/build/*,*/node_modules/*
+let g:ctrlp_working_path_mode = 'ra'
 
 " JsBeautify
 map <c-f> :call JsBeautify()<cr>
