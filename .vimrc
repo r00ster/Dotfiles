@@ -15,24 +15,22 @@ Plugin 'tomtom/tlib_vim'
 Plugin 'garbas/vim-snipmate'
 Plugin 'honza/vim-snippets'
 Plugin 'kien/ctrlp.vim'
+Plugin 'craigemery/vim-autotag'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'scrooloose/nerdtree'
 Plugin 'rking/ag.vim'
 Plugin 'bling/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'alvan/vim-closetag'
-Plugin 'vim-scripts/Colour-Sampler-Pack'
 Plugin 'Valloric/YouCompleteMe'
-Plugin 'joshdick/onedark.vim'
 Plugin 'tpope/vim-surround'
 Plugin 'scrooloose/syntastic'
 Plugin 'Shutnik/jshint2.vim'
-Plugin 'nrocco/vim-phplint'
+Plugin 'ternjs/tern_for_vim'
 Plugin 'majutsushi/tagbar'
 Plugin 'tomtom/tcomment_vim'
 Plugin 'jelera/vim-javascript-syntax'
 Plugin 'pangloss/vim-javascript'
-Plugin 'marijnh/tern_for_vim'
 Plugin 'maksimr/vim-jsbeautify'
 Plugin 'editorconfig/editorconfig-vim'
 Plugin 'sheerun/vim-polyglot'
@@ -40,6 +38,10 @@ Plugin 'mustache/vim-mustache-handlebars'
 Plugin 'tpope/vim-fugitive'
 Plugin 'Shougo/vimproc'
 Plugin 'Shougo/unite.vim'
+Plugin 'posva/vim-vue'
+Plugin 'vim-scripts/indentpython.vim'
+Plugin 'nvie/vim-flake8'
+Plugin 'kristijanhusak/vim-hybrid-material'
 
 " All of your Plugins must be added before the following line
 call vundle#end()
@@ -47,30 +49,32 @@ filetype plugin indent on
 
 " Settings
 " Misc settings
-set ls=2            " allways show status line
-set tabstop=4       " numbers of spaces of tab character
-set shiftwidth=4    " numbers of spaces to (auto)indent
-set scrolloff=3     " keep 3 lines when scrolling
-set showcmd         " display incomplete commands
-set hlsearch        " highlight searches
-set incsearch       " do incremental searching
-set ruler           " show the cursor position all the time
-set visualbell t_vb=    " turn off error beep/flash
-set novisualbell    " turn off visual bell
-set nobackup        " do not keep a backup file
-set number          " show line numbers
-set ignorecase      " ignore case when searching
-set title           " show title in console title bar
-set ttyfast         " smoother changes
-set modeline        " last lines in document sets vim mode
-set modelines=3     " number lines checked for modelines
-set shortmess=atI   " Abbreviate messages
-set nostartofline   " don't jump to first character when paging
-set whichwrap=b,s,h,l,<,>,[,]   " move freely between files
-set backspace=indent,eol,start " backspace past cindented spaces
-set autoindent      " always set autoindenting on
-set noexpandtab       " tabs are not converted to spaces
-set fileformat=unix " allows for single line feeds at end of line
+set encoding=utf-8								" file encoding
+set ls=2           								" allways show status line
+set tabstop=2      								" numbers of spaces of tab character
+set shiftwidth=2   								" numbers of spaces to (auto)indent
+set scrolloff=3    								" keep 3 lines when scrolling
+set showcmd        								" display incomplete commands
+set hlsearch       								" highlight searches
+set incsearch      								" do incremental searching
+set ruler           							" show the cursor position all the time
+set visualbell t_vb=   						" turn off error beep/flash
+set novisualbell    							" turn off visual bell
+set nobackup        							" do not keep a backup file
+set number          							" show line numbers
+set ignorecase      							" ignore case when searching
+set title           							" show title in console title bar
+set ttyfast         							" smoother changes
+set modeline        							" last lines in document sets vim mode
+set modelines=3     							" number lines checked for modelines
+set shortmess=atI   							" Abbreviate messages
+set nostartofline   							" don't jump to first character when paging
+set whichwrap=b,s,h,l,<,>,[,]			" move freely between files
+set backspace=indent,eol,start		" backspace past cindented spaces
+set autoindent      							" always set autoindenting on
+set noexpandtab     							" tabs are not converted to spaces
+set fileformat=unix 							" allows for single line feeds at end of line
+set mouse=a												" enable mouse in all four modes 
 
 " Set ctags folder
 set tags=tags;/
@@ -80,11 +84,8 @@ set clipboard=unnamed
 
 " Turn off auto preview of GetDoc for YCM
 set completeopt-=preview
-
-" Speed up vim
-set ttyfast         " faster redraw
-set ttyscroll=3
-set lazyredraw      " to avoid scrolling problems
+let g:ycm_autoclose_preview_window_after_completion=1
+map ,g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 " Set amount of lines to scroll by
 noremap <C-u> 20<C-u>
@@ -92,9 +93,8 @@ noremap <C-d> 20<C-d>
 
 " Syntax highlighing
 syntax on
-colorscheme onedark 
-let g:onedark_termcolors=256
-let g:airline_theme='onedark'
+set background=dark
+colorscheme hybrid_material
 
 " Autocommand settings
 if has("autocmd")
@@ -115,6 +115,7 @@ if has("autocmd")
 
 " Set syntax for specific file formats
 	au BufNewFile,BufRead  *.blade.* set ft=php.html
+	au BufNewFile,BufRead  *.vue set ft=vue.html.javascript.css
 	au BufNewFile,BufRead  *.blade.* set syntax=blade.php
 	au BufNewFile,BufRead  *.json.* set syntax=json
 	au BufNewFile,BufRead  *jshintrc set syntax=json
